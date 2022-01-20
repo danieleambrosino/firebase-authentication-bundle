@@ -1,0 +1,26 @@
+{
+    "name": "danieleambrosino/firebase-authentication-bundle",
+    "description": "A Symfony bundle providing Firebase JWT authentication out-of-the-box.",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "DanieleAmbrosino\\FirebaseAuthenticationBundle\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Daniele Ambrosino",
+            "email": "mail@danieleambrosino.it"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "firebase/php-jwt": "^5.5",
+        "psr/cache": "^3.0",
+        "symfony/http-client": "^6.0",
+        "symfony/security-bundle": "^6.0",
+        "symfony/dependency-injection": "^6.0",
+        "symfony/config": "^6.0"
+    }
+}
