@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Extracts the encoded JWT from the `Authorization` HTTP header.
  */
-interface TokenExtractorInterface
+interface JWTExtractorInterface
 {
 	/**
 	 * Extracts an authentication token from an HTTP request.

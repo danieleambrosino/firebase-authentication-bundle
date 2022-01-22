@@ -2,12 +2,12 @@
 
 namespace DanieleAmbrosino\FirebaseAuthenticationBundle;
 
-use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\TokenExtractorInterface;
+use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\JWTExtractorInterface;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\TokenNotFoundException;
 
-class TokenExtractor implements TokenExtractorInterface
+class JWTExtractor implements JWTExtractorInterface
 {
 	/**
 	 * {@inheritdoc}

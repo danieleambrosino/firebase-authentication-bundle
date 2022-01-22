@@ -1,6 +1,6 @@
 services:
   firebase_authentication.token_extractor:
-    class: DanieleAmbrosino\FirebaseAuthenticationBundle\TokenExtractor
+    class: DanieleAmbrosino\FirebaseAuthenticationBundle\JWTExtractor
   
   firebase_authentication.public_key_fetcher:
     class: DanieleAmbrosino\FirebaseAuthenticationBundle\PublicKeyFetcher

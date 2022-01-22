@@ -4,7 +4,7 @@ namespace DanieleAmbrosino\FirebaseAuthenticationBundle\Security;
 
 use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\JWTValidatorInterface;
 use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\PublicKeyFetcherInterface;
-use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\TokenExtractorInterface;
+use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\JWTExtractorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +21,7 @@ class FirebaseAuthenticator extends AbstractAuthenticator implements Authenticat
 {
 
 	public function __construct(
-		private TokenExtractorInterface $tokenExtractor,
+		private JWTExtractorInterface $jwtExtractor,
 		private PublicKeyFetcherInterface $publicKeyFetcher,
 		private JWTValidatorInterface $jwtValidator,
 		private int $leeway = 0
@@ -52,10 +52,10 @@ class FirebaseAuthenticator extends AbstractAuthenticator implements Authenticat
 	 */
 	public function authenticate(Request $request): Passport
 	{
-		$token = $this->tokenExtractor->extract($request);
+		try {
+			$token = $this->jwtExtractor->extract($request);
 		$publicKeyCollection = $this->publicKeyFetcher->getKeys();
 
-		try {
 			$this->jwtValidator
 				->setJWT($token)
 				->setPublicKeys($publicKeyCollection)
@@ -64,8 +64,8 @@ class FirebaseAuthenticator extends AbstractAuthenticator implements Authenticat
 			$this->jwtValidator->validate();
 
 			$email = $this->jwtValidator->getEmail();
-		} catch (Throwable $any) {
-			throw new AuthenticationException($any->getMessage());
+		} catch (InvalidArgumentException $e) {
+			throw new AuthenticationException($e->getMessage());
 		}
 
 		return new SelfValidatingPassport(new UserBadge($email));
