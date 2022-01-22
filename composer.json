@@ -1,6 +1,6 @@
 {
     "name": "danieleambrosino/firebase-authentication-bundle",
-    "description": "A Symfony bundle providing Firebase JWT authentication out-of-the-box.",
+    "description": "A lightweight, self-contained Symfony bundle providing authentication with JWTs generated from Firebase client SDK.",
     "type": "symfony-bundle",
     "license": "MIT",
     "autoload": {
