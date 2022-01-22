@@ -11,7 +11,7 @@ use Serializable;
 interface PublicKeyCollectionInterface extends Serializable
 {
 	/**
-	 * Gets the public key corresponding to the given id.
+	 * Gets the public key corresponding to the given ID.
 	 * 
 	 * @return string The corresponding public key.
 	 * @throws InvalidArgumentException If no corresponding key is found.
@@ -19,8 +19,8 @@ interface PublicKeyCollectionInterface extends Serializable
 	public function get(string $id): string;
 
 	/**
-	 * Sets a public key with the given id.
-	 * If the given id does not exist, the public key it is added to the collection.
+	 * Sets a public key with the given ID.
+	 * If the given ID does not exist, the public key is added to the collection.
 	 * Otherwise, the public key is overwritten.
 	 * 
 	 * @return PublicKeyCollectionInterface The updated collection.

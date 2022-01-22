@@ -11,25 +11,34 @@ interface JWTValidatorInterface
 {
 
 	/**
-	 * Sets the token to decode and validate.
+	 * Sets the token and decodes it.
 	 * 
+	 * @return self The updated Validator.
+	 * @throws InvalidArgumentException If the decoding fails.
 	 */
 	public function setJWT(string $token): self;
 
 	/**
 	 * Sets the collection of candidate public keys to verify the signature.
+	 * 
+	 * @return self The updated Validator.
 	 */
 	public function setPublicKeys(PublicKeyCollectionInterface $publicKeys): self;
 
 	/**
 	 * Sets the leeway (in seconds) used to account for clock skew with Google's servers.
+	 * 
+	 * @return self The updated Validator.
+	 * @throws InvalidArgumentException If a negative leeway is set.
 	 */
 	public function setLeeway(int $leeway): self;
 	
 	/**
-	 * Validates the currently set token using the appropriate public key.
+	 * Validates the currently set token, verifying that the claims follow their constraints
+	 * and that the signature is valid using the appropriate public key.
 	 * 
-	 * @throws InvalidArgumentException if the validation fails.
+	 * @throws InvalidArgumentException If the validation fails.
+	 * @link https://firebase.google.com/docs/auth/admin/verify-id-tokens#verify_id_tokens_using_a_third-party_jwt_library
 	 */
 	public function validate();
 

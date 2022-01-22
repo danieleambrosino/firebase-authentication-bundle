@@ -11,6 +11,7 @@ use DateInterval;
 use DateTimeImmutable;
 use DateTimeInterface;
 use InvalidArgumentException;
+use JsonException;
 use OpenSSLAsymmetricKey;
 
 class JWTValidator implements JWTValidatorInterface
@@ -35,7 +36,7 @@ class JWTValidator implements JWTValidatorInterface
 
 	/**
 	 * The encoded header and payload concatenated with a '.',
-	 * which is the data cryptographycally signed.
+	 * which is the cryptographically signed data.
 	 */
 	private ?string $signedData = null;
 
@@ -66,6 +67,8 @@ class JWTValidator implements JWTValidatorInterface
 		 */
 		private string $firebaseProjectId
 	) {
+		// By default, set the leeway to 0 seconds
+		$this->leeway = new DateInterval('PT0S');
 	}
 
 	/**
@@ -84,6 +87,39 @@ class JWTValidator implements JWTValidatorInterface
 	/**
 	 * @inheritdoc
 	 */
+	public function setJWT(string $token): self
+	{
+		[$this->header, $this->payload, $this->signature] = self::decode($token);
+		$this->signedData = self::getSignedData($token);
+
+		return $this;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function setPublicKeys(PublicKeyCollectionInterface $publicKeyCandidates): self
+	{
+		$this->publicKeyCandidates = $publicKeyCandidates;
+		return $this;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function setLeeway(int $leeway): self
+	{
+		if ($leeway < 0) {
+			throw new InvalidArgumentException('Leeway must be a positive number');
+		}
+
+		$this->leeway = new DateInterval('PT' . $leeway . 'S');
+		return $this;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function getEmail(): string
 	{
 		if (
@@ -95,35 +131,14 @@ class JWTValidator implements JWTValidatorInterface
 		return $this->payload['email'];
 	}
 
-	public function setJWT(string $token): self
-	{
-		[$this->header, $this->payload, $this->signature] = self::decode($token);
-		$this->signedData = self::getSignedData($token);
-
-		return $this;
-	}
-
-	private static function getSignedData(string $token): string
-	{
-		return implode('.', explode('.', $token, -1));
-	}
-
-	public function setPublicKeys(PublicKeyCollectionInterface $publicKeyCandidates): self
-	{
-		$this->publicKeyCandidates = $publicKeyCandidates;
-		return $this;
-	}
-
-	public function setLeeway(int $leeway): self
-	{
-		if ($leeway < 0) {
-			throw new InvalidArgumentException('Leeway must be a positive number');
-		}
-
-		$this->leeway = new DateInterval('PT' . $leeway . 'S');
-		return $this;
-	}
-
+	/**
+	 * Decodes the token splitting it into header, payload and signature.
+	 * All the three parts are base64 decoded; the header and the payload 
+	 * are also JSON decoded as associative arrays.
+	 * 
+	 * @param string $token The encoded JWT.
+	 * @return array An array with `[$header, $payload, $signature]`
+	 */
 	private static function decode(string $token): array
 	{
 		$explodedToken = explode('.', $token, 3);
@@ -132,20 +147,37 @@ class JWTValidator implements JWTValidatorInterface
 		}
 
 		[$header, $payload, $signature] = $explodedToken;
-		[$header, $payload, $signature] = [
-			json_decode(self::base64UrlDecode($header), true),
-			json_decode(self::base64UrlDecode($payload), true),
-			self::base64UrlDecode($signature),
-		];
-
-		if ($header === false || $payload === false || $signature === false) {
-			throw new InvalidArgumentException('Invalid JWT');
+		try {
+			[$header, $payload, $signature] = [
+				json_decode(self::base64UrlDecode($header), true, flags: JSON_THROW_ON_ERROR),
+				json_decode(self::base64UrlDecode($payload), true, flags: JSON_THROW_ON_ERROR),
+				self::base64UrlDecode($signature),
+			];
+		} catch (InvalidArgumentException | JsonException $e) {
+			throw new InvalidArgumentException('The JWT cannot be decoded because it was not properly encoded');
 		}
 
 		return [$header, $payload, $signature];
 	}
 
 	/**
+	 * Returns the encoded header and payload concatenated with a '.',
+	 * which is the cryptographically signed data.
+	 * 
+	 * @param string $token The encoded token.
+	 * @return string The signed data.
+	 */
+	private static function getSignedData(string $token): string
+	{
+		return implode('.', explode('.', $token, -1));
+	}
+
+	/**
+	 * Implements the "base64url" decoding algorithm.
+	 * 
+	 * @param string $input The encoded input.
+	 * @return string The decoded output.
+	 * @throws InvalidArgumentException If the input cannot be decoded.
 	 * @link https://datatracker.ietf.org/doc/html/rfc4648#section-5
 	 */
 	private static function base64UrlDecode(string $input): string
@@ -155,9 +187,18 @@ class JWTValidator implements JWTValidatorInterface
 			$paddingLength = 4 - $remainder;
 			$input .= str_repeat('=', $paddingLength);
 		}
-		return base64_decode(strtr($input, '-_', '+/'));
+		$decoded = base64_decode(strtr($input, '-_', '+/'));
+		if ($decoded === false) {
+			throw new InvalidArgumentException('The token is not correctly base64 encoded');
+		}
+		return $decoded;
 	}
 
+	/**
+	 * Checks if all the parts of the JWT and the public keys
+	 * have been correctly set.
+	 * @throws InvalidArgumentException If one or more of the components have not been loaded.
+	 */
 	private function checkJWTAndPublicKeysAreLoaded()
 	{
 		if (
@@ -169,5 +210,4 @@ class JWTValidator implements JWTValidatorInterface
 			throw new InvalidArgumentException('JWT and public keys are not properly loaded');
 		}
 	}
-
 }

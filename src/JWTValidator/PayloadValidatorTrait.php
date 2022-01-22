@@ -68,7 +68,7 @@ trait PayloadValidatorTrait
 		}
 
 		if ($this->payload['iss'] !== "https://securetoken.google.com/{$this->firebaseProjectId}") {
-			throw new InvalidArgumentException('The JWT is not been issued by Google');
+			throw new InvalidArgumentException('The JWT has not been issued by Google');
 		}
 	}
 

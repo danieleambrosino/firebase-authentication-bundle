@@ -11,7 +11,12 @@ use InvalidArgumentException;
  */
 trait HeaderValidatorTrait
 {
-
+	/**
+	 * Verifies that all the claims in the header
+	 * follow the appropriate constraints.
+	 * 
+	 * @throws InvalidArgumentException If any of the contraints is not respected.
+	 */
 	private function verifyHeaderClaims()
 	{
 		//alg

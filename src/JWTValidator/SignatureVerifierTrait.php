@@ -35,7 +35,7 @@ trait SignatureVerifierTrait
 	{
 		$result = openssl_verify($this->signedData, $this->signature, $this->publicKey, OPENSSL_ALGO_SHA256);
 		if ($result !== 1) {
-			throw new InvalidArgumentException('Invalid public key');
+			throw new InvalidArgumentException('Invalid JWT signature');
 		}
 	}
 }

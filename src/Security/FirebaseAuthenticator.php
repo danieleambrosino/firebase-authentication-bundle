@@ -5,6 +5,7 @@ namespace DanieleAmbrosino\FirebaseAuthenticationBundle\Security;
 use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\JWTValidatorInterface;
 use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\PublicKeyFetcherInterface;
 use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\JWTExtractorInterface;
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,7 +16,6 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
-use Throwable;
 
 class FirebaseAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
 {
@@ -54,7 +54,7 @@ class FirebaseAuthenticator extends AbstractAuthenticator implements Authenticat
 	{
 		try {
 			$token = $this->jwtExtractor->extract($request);
-		$publicKeyCollection = $this->publicKeyFetcher->getKeys();
+			$publicKeyCollection = $this->publicKeyFetcher->getKeys();
 
 			$this->jwtValidator
 				->setJWT($token)
@@ -72,7 +72,8 @@ class FirebaseAuthenticator extends AbstractAuthenticator implements Authenticat
 	}
 
 	/**
-	 * Return null to pass the request to the next handler.
+	 * Returns null to pass the request to the next handler.
+	 * @inheritdoc
 	 */
 	public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
 	{
@@ -80,7 +81,8 @@ class FirebaseAuthenticator extends AbstractAuthenticator implements Authenticat
 	}
 
 	/**
-	 * Return the appropriate 401 HTTP response.
+	 * Returns the appropriate 401 HTTP response.
+	 * @inheritdoc
 	 */
 	public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
 	{
