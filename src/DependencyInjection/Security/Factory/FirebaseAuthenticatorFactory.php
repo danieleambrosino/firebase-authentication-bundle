@@ -27,14 +27,18 @@ class FirebaseAuthenticatorFactory implements AuthenticatorFactoryInterface
 	}
 
 	/**
-	 * @param ArrayNodeDefinition $builder
-	 * @inheritdoc
+	 * Sets the configuration definition for the FirebaseAuthenticator
+	 * on a per-firewall basis.
+	 * 
+	 * @param ArrayNodeDefinition $builder The configuration definition builder.
 	 */
 	public function addConfiguration(NodeDefinition $builder)
 	{
 		$builder
 			->children()
-			->scalarNode('leeway')->defaultValue(0)->end()
+				->scalarNode('leeway')
+					->defaultValue(0)
+					->end()
 			->end();
 	}
 
