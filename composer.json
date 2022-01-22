@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": "^8.0",
-        "firebase/php-jwt": "^5.5",
+        "ext-openssl": "*",
         "psr/cache": "^3.0",
         "symfony/http-client": "^6.0",
         "symfony/security-bundle": "^6.0",
