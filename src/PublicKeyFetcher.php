@@ -30,12 +30,12 @@ class PublicKeyFetcher implements PublicKeyFetcherInterface
 
 	private function getKeysFromCache(): ?PublicKeyCollectionInterface
 	{
-		$cacheItemKey = md5(__CLASS__);
+		$cacheItemKey = self::getCacheKey();
 		if ($this->cache->hasItem($cacheItemKey) === false) {
 			return null;
 		}
 		$cacheItem = $this->cache->getItem($cacheItemKey);
-		
+
 		$serializedKeys = $cacheItem->get();
 		$keys = unserialize($serializedKeys);
 		return $keys;
@@ -46,13 +46,13 @@ class PublicKeyFetcher implements PublicKeyFetcherInterface
 		$response = $this->httpClient->request('GET', self::GOOGLE_PUBLIC_KEYS_URL);
 
 		$serializedKeys = $response->getContent();
-		$maxAge = $this->getMaxAge($response);
+		$maxAge = self::getMaxAge($response);
 
 		$keys = json_decode($serializedKeys, true);
 
 		$keyCollection = new PublicKeyCollection($keys);
 
-		$cacheItemKey = md5(__CLASS__);
+		$cacheItemKey = self::getCacheKey();
 		$cacheItem = $this->cache->getItem($cacheItemKey);
 		$cacheItem->set(serialize($keyCollection));
 		$cacheItem->expiresAfter($maxAge);
@@ -61,16 +61,21 @@ class PublicKeyFetcher implements PublicKeyFetcherInterface
 		return $keyCollection;
 	}
 
-	private function getMaxAge(ResponseInterface $response): int
+	private static function getMaxAge(ResponseInterface $response): int
 	{
 		$cacheControlHeader = ($response->getHeaders())['cache-control'][0];
 		preg_match('/max-age=(\d+)/', $cacheControlHeader, $matches);
-		
+
 		$maxAge = 0;
 		if (count($matches) >= 2) {
 			$maxAge = $matches[1];
 		}
 
 		return (int) $maxAge;
+	}
+
+	private static function getCacheKey(): string
+	{
+		return md5(__CLASS__);
 	}
 }

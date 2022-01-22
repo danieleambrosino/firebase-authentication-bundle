@@ -97,13 +97,13 @@ class JWTValidator implements JWTValidatorInterface
 
 	public function setJWT(string $token): self
 	{
-		[$this->header, $this->payload, $this->signature] = $this->decode($token);
-		$this->signedData = $this->getSignedData($token);
+		[$this->header, $this->payload, $this->signature] = self::decode($token);
+		$this->signedData = self::getSignedData($token);
 
 		return $this;
 	}
 
-	private function getSignedData(string $token): string
+	private static function getSignedData(string $token): string
 	{
 		return implode('.', explode('.', $token, -1));
 	}
@@ -124,7 +124,7 @@ class JWTValidator implements JWTValidatorInterface
 		return $this;
 	}
 
-	private function decode(string $token): array
+	private static function decode(string $token): array
 	{
 		$explodedToken = explode('.', $token, 3);
 		if (count($explodedToken) !== 3) {
@@ -133,9 +133,9 @@ class JWTValidator implements JWTValidatorInterface
 
 		[$header, $payload, $signature] = $explodedToken;
 		[$header, $payload, $signature] = [
-			json_decode($this->urlSafeBase64Decode($header), true),
-			json_decode($this->urlSafeBase64Decode($payload), true),
-			$this->urlSafeBase64Decode($signature),
+			json_decode(self::base64UrlDecode($header), true),
+			json_decode(self::base64UrlDecode($payload), true),
+			self::base64UrlDecode($signature),
 		];
 
 		if ($header === false || $payload === false || $signature === false) {
@@ -145,7 +145,10 @@ class JWTValidator implements JWTValidatorInterface
 		return [$header, $payload, $signature];
 	}
 
-	private function urlSafeBase64Decode(string $input): string
+	/**
+	 * @link https://datatracker.ietf.org/doc/html/rfc4648#section-5
+	 */
+	private static function base64UrlDecode(string $input): string
 	{
 		$remainder = strlen($input) % 4;
 		if ($remainder) {
