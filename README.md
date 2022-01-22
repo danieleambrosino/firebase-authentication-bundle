@@ -19,9 +19,9 @@ security:
             firebase: ~
 ```
 and authenticate your requests sending a JWT into an `Authorization: Bearer` HTTP header.
-That's it! If the JWT is valid, the authenticated user will be provided using the `email` claim in the JWT payload.
+That's it! If the JWT is valid, the authenticated user will be identified using the `email` claim in the JWT payload.
 
-Optionally, you can add a `leeway` (as a positive integer number of seconds) to account for clock skew with Google's servers:
+Optionally, you can add a `leeway` (as a positive integer number of seconds) on a per-firewall basis to account for clock skew with Google's servers:
 
 ```yaml
 # config/packages/security.yaml
