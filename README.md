@@ -1,11 +1,13 @@
 # FirebaseAuthenticationBundle
-A lightweight Symfony bundle providing authentication through Firebase JWT.
+A lightweight Symfony bundle providing authentication for JWTs generated from Firebase client SDK.
 
-No configuration is required, it just works out of the box!
+The only parameter you have to set is your Firebase project's ID in the `FIREBASE_PROJECT_ID` environment variable:
 
-Authenticate your requests sending a JWT into an `Authorization: Bearer` HTTP header.
+```env
+FIREBASE_PROJECT_ID=your-project-id
+```
 
-To enable the authenticator, add the `firebase` authenticator to any of your app's firewall:
+Add the `firebase` authenticator to any of your app's firewall:
 
 ```yaml
 # config/packages/security.yaml
@@ -15,9 +17,10 @@ security:
 			stateless: true
 			firebase: ~
 ```
-and that's it!
+and authenticate your requests sending a JWT into an `Authorization: Bearer` HTTP header.
+And that's it!
 
-Optionally, you can add a `leeway` to deal with clock skew with Google's servers:
+Optionally, you can add a `leeway` to account for clock skew with Google's servers:
 
 ```yaml
 # config/packages/security.yaml
