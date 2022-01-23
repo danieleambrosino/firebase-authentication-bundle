@@ -18,8 +18,9 @@ security:
             stateless: true
             firebase: ~
 ```
-and authenticate your requests sending a JWT into an `Authorization: Bearer` HTTP header.
-That's it! If the JWT is valid, the authenticated user will be identified using the `email` claim in the JWT payload.
+and authenticate your requests sending the JWT generated with the [Auth package of the Firebase JavaScript SDK](https://firebase.google.com/docs/reference/js/auth.md#auth_package) into an `Authorization: Bearer` HTTP header (accordingly to [the OAuth 2.0 specification](https://datatracker.ietf.org/doc/html/rfc6750#section-2.1)).
+
+That's it! If the JWT is valid and **the email is verified**, the authenticated user will be identified using the `email` claim in the JWT payload.
 
 Optionally, you can add a `leeway` (as a positive integer number of seconds) on a per-firewall basis to account for clock skew with Google's servers:
 

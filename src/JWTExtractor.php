@@ -10,7 +10,11 @@ use Symfony\Component\Security\Core\Exception\TokenNotFoundException;
 class JWTExtractor implements JWTExtractorInterface
 {
 	/**
-	 * {@inheritdoc}
+	 * @inheritdoc
+	 * According to the specification, the token is parsed
+	 * assuming that exactly one whitespace character separates
+	 * the authentication scheme ('Bearer') and the token.
+	 * @link https://datatracker.ietf.org/doc/html/rfc6750#section-2.1
 	 */
 	public function extract(Request $request): string
 	{
