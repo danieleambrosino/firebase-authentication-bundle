@@ -7,6 +7,7 @@ use InvalidArgumentException;
 /**
  * Validates a JWS, verifying its claims and its signature.
  * @link https://datatracker.ietf.org/doc/html/rfc7515
+ * @link https://datatracker.ietf.org/doc/html/rfc7519#section-7.2
  */
 interface JWSValidatorInterface
 {
@@ -38,7 +39,8 @@ interface JWSValidatorInterface
 	 * and that the signature is valid using the appropriate public key.
 	 * 
 	 * @throws InvalidArgumentException If the validation fails.
-	 * @link https://firebase.google.com/docs/auth/admin/verify-id-tokens#verify_id_tokens_using_a_third-party_JWS_library
+	 * @link https://datatracker.ietf.org/doc/html/rfc7519#section-7.2
+	 * @link https://firebase.google.com/docs/auth/admin/verify-id-tokens#verify_id_tokens_using_a_third-party_jwt_library
 	 */
 	public function validate();
 

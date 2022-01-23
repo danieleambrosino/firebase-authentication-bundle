@@ -86,8 +86,8 @@ class RS256JWSValidator implements JWSValidatorInterface
 		$this->now = new DateTimeImmutable();
 
 		$this->verifyHeaderClaims();
-		$this->verifyPayloadClaims();
 		$this->verifySignature();
+		$this->verifyPayloadClaims();
 	}
 
 	/**
@@ -132,7 +132,7 @@ class RS256JWSValidator implements JWSValidatorInterface
 			!isset($this->payload['email']) ||
 			!is_string($this->payload['email'])
 		) {
-			throw new InvalidArgumentException('The JWT does not contain an email');
+			throw new InvalidArgumentException('The JWS does not contain an email');
 		}
 		return $this->payload['email'];
 	}
@@ -142,14 +142,15 @@ class RS256JWSValidator implements JWSValidatorInterface
 	 * All the three parts are base64 decoded; the header and the payload 
 	 * are also JSON decoded as associative arrays.
 	 * 
-	 * @param string $token The encoded JWT.
+	 * @param string $token The encoded JWS.
 	 * @return array An array with `[$header, $payload, $signature]`
+	 * @link https://datatracker.ietf.org/doc/html/rfc7519#section-7.2
 	 */
 	private static function decode(string $token): array
 	{
 		$explodedToken = explode('.', $token, 3);
 		if (count($explodedToken) !== 3) {
-			throw new InvalidArgumentException('Invalid JWT');
+			throw new InvalidArgumentException('Invalid JWS');
 		}
 
 		[$header, $payload, $signature] = $explodedToken;
@@ -160,7 +161,7 @@ class RS256JWSValidator implements JWSValidatorInterface
 				self::base64UrlDecode($signature),
 			];
 		} catch (InvalidArgumentException | JsonException $e) {
-			throw new InvalidArgumentException('The JWT cannot be decoded because it was not properly encoded');
+			throw new InvalidArgumentException('The JWS cannot be decoded because it was not properly encoded');
 		}
 
 		return [$header, $payload, $signature];
@@ -201,7 +202,7 @@ class RS256JWSValidator implements JWSValidatorInterface
 	}
 
 	/**
-	 * Checks if all the parts of the JWT and the public keys
+	 * Checks if all the parts of the JWS and the public keys
 	 * have been correctly set.
 	 * @throws InvalidArgumentException If one or more of the components have not been loaded.
 	 */
@@ -213,7 +214,7 @@ class RS256JWSValidator implements JWSValidatorInterface
 			$this->signature === null ||
 			$this->publicKeyCandidates === null
 		) {
-			throw new InvalidArgumentException('JWT and public keys are not properly loaded');
+			throw new InvalidArgumentException('JWS and public keys are not properly loaded');
 		}
 	}
 }
