@@ -22,7 +22,7 @@ class FirebaseAuthenticator extends AbstractAuthenticator implements Authenticat
 	public function __construct(
 		private JWTExtractorInterface $jwtExtractor,
 		private PublicKeyFetcherInterface $publicKeyFetcher,
-		private JWSValidatorInterface $JWSValidator,
+		private JWSValidatorInterface $jwsValidator,
 		private int $leeway = 0
 	) {
 	}
@@ -55,14 +55,14 @@ class FirebaseAuthenticator extends AbstractAuthenticator implements Authenticat
 			$token = $this->jwtExtractor->extract($request);
 			$publicKeyCollection = $this->publicKeyFetcher->getKeys();
 
-			$this->JWSValidator
+			$this->jwsValidator
 				->setJWS($token)
 				->setPublicKeys($publicKeyCollection)
 				->setLeeway($this->leeway);
 
-			$this->JWSValidator->validate();
+			$this->jwsValidator->validate();
 
-			$email = $this->JWSValidator->getEmail();
+			$email = $this->jwsValidator->getEmail();
 		} catch (InvalidArgumentException $e) {
 			throw new AuthenticationException($e->getMessage());
 		}

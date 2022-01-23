@@ -1,21 +1,17 @@
 services:
-  firebase_authentication.token_extractor:
+  _defaults:
+    autowire: true
+
+  DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\JWTExtractorInterface:
     class: DanieleAmbrosino\FirebaseAuthenticationBundle\JWTExtractor
   
-  firebase_authentication.public_key_fetcher:
+  DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\PublicKeyFetcherInterface:
     class: DanieleAmbrosino\FirebaseAuthenticationBundle\PublicKeyFetcher
-    arguments:
-      - '@cache.app'
-      - '@http_client'
   
-  firebase_authentication.jws_validator:
+  DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\JWSValidatorInterface:
     class: DanieleAmbrosino\FirebaseAuthenticationBundle\RS256JWSValidator
     arguments:
       - '%firebase_authentication.project_id%'
   
   firebase_authentication.authenticator:
     class: DanieleAmbrosino\FirebaseAuthenticationBundle\Security\FirebaseAuthenticator
-    arguments:
-      - '@firebase_authentication.token_extractor'
-      - '@firebase_authentication.public_key_fetcher'
-      - '@firebase_authentication.jws_validator'

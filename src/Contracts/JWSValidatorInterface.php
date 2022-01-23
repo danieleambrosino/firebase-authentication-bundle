@@ -6,6 +6,7 @@ use InvalidArgumentException;
 
 /**
  * Validates a JWS, verifying its claims and its signature.
+ * @link https://datatracker.ietf.org/doc/html/rfc7515
  */
 interface JWSValidatorInterface
 {
