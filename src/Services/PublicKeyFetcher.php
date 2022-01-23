@@ -1,7 +1,8 @@
 <?php
 
-namespace DanieleAmbrosino\FirebaseAuthenticationBundle;
+namespace DanieleAmbrosino\FirebaseAuthenticationBundle\Services;
 
+use DanieleAmbrosino\FirebaseAuthenticationBundle\Collections\PublicKeyCollection;
 use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\PublicKeyCollectionInterface;
 use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\PublicKeyFetcherInterface;
 use Psr\Cache\CacheItemPoolInterface;

@@ -1,6 +1,6 @@
 <?php
 
-namespace DanieleAmbrosino\FirebaseAuthenticationBundle;
+namespace DanieleAmbrosino\FirebaseAuthenticationBundle\Services;
 
 use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\JWTExtractorInterface;
 use InvalidArgumentException;

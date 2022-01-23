@@ -1,6 +1,6 @@
 <?php
 
-namespace DanieleAmbrosino\FirebaseAuthenticationBundle\JWSValidator;
+namespace DanieleAmbrosino\FirebaseAuthenticationBundle\Services\JWSValidator;
 
 use InvalidArgumentException;
 

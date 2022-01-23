@@ -1,12 +1,12 @@
 <?php
 
-namespace DanieleAmbrosino\FirebaseAuthenticationBundle;
+namespace DanieleAmbrosino\FirebaseAuthenticationBundle\Services;
 
 use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\JWSValidatorInterface;
 use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\PublicKeyCollectionInterface;
-use DanieleAmbrosino\FirebaseAuthenticationBundle\JWSValidator\HeaderValidatorTrait;
-use DanieleAmbrosino\FirebaseAuthenticationBundle\JWSValidator\PayloadValidatorTrait;
-use DanieleAmbrosino\FirebaseAuthenticationBundle\JWSValidator\SignatureValidatorTrait;
+use DanieleAmbrosino\FirebaseAuthenticationBundle\Services\JWSValidator\HeaderValidatorTrait;
+use DanieleAmbrosino\FirebaseAuthenticationBundle\Services\JWSValidator\PayloadValidatorTrait;
+use DanieleAmbrosino\FirebaseAuthenticationBundle\Services\JWSValidator\SignatureValidatorTrait;
 use DateInterval;
 use DateTimeImmutable;
 use DateTimeInterface;

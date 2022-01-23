@@ -1,6 +1,6 @@
 <?php
 
-namespace DanieleAmbrosino\FirebaseAuthenticationBundle;
+namespace DanieleAmbrosino\FirebaseAuthenticationBundle\Collections;
 
 use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\PublicKeyCollectionInterface;
 use InvalidArgumentException;

@@ -3,13 +3,13 @@ services:
     autowire: true
 
   DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\JWTExtractorInterface:
-    class: DanieleAmbrosino\FirebaseAuthenticationBundle\JWTExtractor
+    class: DanieleAmbrosino\FirebaseAuthenticationBundle\Services\JWTExtractor
   
   DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\PublicKeyFetcherInterface:
-    class: DanieleAmbrosino\FirebaseAuthenticationBundle\PublicKeyFetcher
+    class: DanieleAmbrosino\FirebaseAuthenticationBundle\Services\PublicKeyFetcher
   
   DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\JWSValidatorInterface:
-    class: DanieleAmbrosino\FirebaseAuthenticationBundle\RS256JWSValidator
+    class: DanieleAmbrosino\FirebaseAuthenticationBundle\Services\RS256JWSValidator
     arguments:
       - '%firebase_authentication.project_id%'
   
