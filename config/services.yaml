@@ -8,8 +8,8 @@ services:
       - '@cache.app'
       - '@http_client'
   
-  firebase_authentication.jwt_validator:
-    class: DanieleAmbrosino\FirebaseAuthenticationBundle\JWTValidator
+  firebase_authentication.jws_validator:
+    class: DanieleAmbrosino\FirebaseAuthenticationBundle\RS256JWSValidator
     arguments:
       - '%firebase_authentication.project_id%'
   
@@ -18,4 +18,4 @@ services:
     arguments:
       - '@firebase_authentication.token_extractor'
       - '@firebase_authentication.public_key_fetcher'
-      - '@firebase_authentication.jwt_validator'
+      - '@firebase_authentication.jws_validator'

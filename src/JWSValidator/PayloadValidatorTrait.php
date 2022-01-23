@@ -1,6 +1,6 @@
 <?php
 
-namespace DanieleAmbrosino\FirebaseAuthenticationBundle\JWTValidator;
+namespace DanieleAmbrosino\FirebaseAuthenticationBundle\JWSValidator;
 
 use DateTime;
 use InvalidArgumentException;
@@ -14,22 +14,22 @@ trait PayloadValidatorTrait
 	private function verifyPayloadClaims()
 	{
 		// exp
-		$this->isNotExpired();
+		$this->assertIsNotExpired();
 		// iat
-		$this->hasBeenIssuedInThePast();
+		$this->assertHasBeenIssuedInThePast();
 		// aud
-		$this->isIntendedForThisProject();
+		$this->assertIsIntendedForThisProject();
 		// iss
-		$this->hasBeenIssuedByGoogle();
+		$this->assertHasBeenIssuedByGoogle();
 		// sub
-		$this->hasSubject();
+		$this->assertHasSubject();
 		// auth_time
-		$this->authTimeIsInThePast();
+		$this->assertAuthTimeIsInThePast();
 		// email_verified
-		$this->emailIsVerified();
+		$this->assertEmailIsVerified();
 	}
 
-	private function isNotExpired()
+	private function assertIsNotExpired()
 	{
 		if (!isset($this->payload['exp'])) {
 			throw new InvalidArgumentException('Expiration time is not set');
@@ -40,7 +40,7 @@ trait PayloadValidatorTrait
 		}
 	}
 
-	private function hasBeenIssuedInThePast()
+	private function assertHasBeenIssuedInThePast()
 	{
 		if (!isset($this->payload['iat'])) {
 			throw new InvalidArgumentException('Issue time is not set');
@@ -52,7 +52,7 @@ trait PayloadValidatorTrait
 		}
 	}
 
-	private function isIntendedForThisProject()
+	private function assertIsIntendedForThisProject()
 	{
 		if (!isset($this->payload['aud'])) {
 			throw new InvalidArgumentException('Audience is not set');
@@ -63,7 +63,7 @@ trait PayloadValidatorTrait
 		}
 	}
 
-	private function hasBeenIssuedByGoogle()
+	private function assertHasBeenIssuedByGoogle()
 	{
 		if (!isset($this->payload['iss'])) {
 			throw new InvalidArgumentException('Issuer is not set');
@@ -74,7 +74,7 @@ trait PayloadValidatorTrait
 		}
 	}
 
-	private function hasSubject()
+	private function assertHasSubject()
 	{
 		if (!isset($this->payload['sub'])) {
 			throw new InvalidArgumentException('Subject is not set');
@@ -88,7 +88,7 @@ trait PayloadValidatorTrait
 		}
 	}
 
-	private function authTimeIsInThePast()
+	private function assertAuthTimeIsInThePast()
 	{
 		if (!isset($this->payload['auth_time'])) {
 			throw new InvalidArgumentException('Authentication time is not set');
@@ -100,7 +100,8 @@ trait PayloadValidatorTrait
 		}
 	}
 
-	private function emailIsVerified() {
+	private function assertEmailIsVerified()
+	{
 		if (!isset($this->payload['email_verified'])) {
 			throw new InvalidArgumentException('Cannot tell if the email address has been verified ("email_verified" claim missing)');
 		}

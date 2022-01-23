@@ -2,7 +2,7 @@
 
 namespace DanieleAmbrosino\FirebaseAuthenticationBundle\Security;
 
-use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\JWTValidatorInterface;
+use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\JWSValidatorInterface;
 use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\PublicKeyFetcherInterface;
 use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\JWTExtractorInterface;
 use InvalidArgumentException;
@@ -19,11 +19,10 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 
 class FirebaseAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
 {
-
 	public function __construct(
 		private JWTExtractorInterface $jwtExtractor,
 		private PublicKeyFetcherInterface $publicKeyFetcher,
-		private JWTValidatorInterface $jwtValidator,
+		private JWSValidatorInterface $JWSValidator,
 		private int $leeway = 0
 	) {
 	}
@@ -56,14 +55,14 @@ class FirebaseAuthenticator extends AbstractAuthenticator implements Authenticat
 			$token = $this->jwtExtractor->extract($request);
 			$publicKeyCollection = $this->publicKeyFetcher->getKeys();
 
-			$this->jwtValidator
-				->setJWT($token)
+			$this->JWSValidator
+				->setJWS($token)
 				->setPublicKeys($publicKeyCollection)
 				->setLeeway($this->leeway);
 
-			$this->jwtValidator->validate();
+			$this->JWSValidator->validate();
 
-			$email = $this->jwtValidator->getEmail();
+			$email = $this->JWSValidator->getEmail();
 		} catch (InvalidArgumentException $e) {
 			throw new AuthenticationException($e->getMessage());
 		}

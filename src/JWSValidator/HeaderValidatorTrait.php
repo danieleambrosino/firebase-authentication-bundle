@@ -1,6 +1,6 @@
 <?php
 
-namespace DanieleAmbrosino\FirebaseAuthenticationBundle\JWTValidator;
+namespace DanieleAmbrosino\FirebaseAuthenticationBundle\JWSValidator;
 
 use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\PublicKeyCollectionInterface;
 use InvalidArgumentException;
@@ -13,19 +13,19 @@ trait HeaderValidatorTrait
 {
 	/**
 	 * Verifies that all the claims in the header
-	 * follow the appropriate constraints.
+	 * conform to the appropriate constraints.
 	 * 
 	 * @throws InvalidArgumentException If any of the contraints is not respected.
 	 */
 	private function verifyHeaderClaims()
 	{
 		//alg
-		$this->isSignedUsingRS256();
+		$this->assertIsSignedUsingRS256();
 		//kid
-		$this->keyExists();
+		$this->assertKeyExists();
 	}
 
-	private function isSignedUsingRS256()
+	private function assertIsSignedUsingRS256()
 	{
 		if (!isset($this->header['alg'])) {
 			throw new InvalidArgumentException('alg header claim is not set');
@@ -35,7 +35,7 @@ trait HeaderValidatorTrait
 		}
 	}
 
-	private function keyExists()
+	private function assertKeyExists()
 	{
 		if (!isset($this->header['kid'])) {
 			throw new InvalidArgumentException('Key ID is not set');

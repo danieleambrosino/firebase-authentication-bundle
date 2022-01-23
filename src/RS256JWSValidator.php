@@ -2,11 +2,11 @@
 
 namespace DanieleAmbrosino\FirebaseAuthenticationBundle;
 
-use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\JWTValidatorInterface;
+use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\JWSValidatorInterface;
 use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\PublicKeyCollectionInterface;
-use DanieleAmbrosino\FirebaseAuthenticationBundle\JWTValidator\HeaderValidatorTrait;
-use DanieleAmbrosino\FirebaseAuthenticationBundle\JWTValidator\PayloadValidatorTrait;
-use DanieleAmbrosino\FirebaseAuthenticationBundle\JWTValidator\SignatureVerifierTrait;
+use DanieleAmbrosino\FirebaseAuthenticationBundle\JWSValidator\HeaderValidatorTrait;
+use DanieleAmbrosino\FirebaseAuthenticationBundle\JWSValidator\PayloadValidatorTrait;
+use DanieleAmbrosino\FirebaseAuthenticationBundle\JWSValidator\SignatureValidatorTrait;
 use DateInterval;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -14,31 +14,36 @@ use InvalidArgumentException;
 use JsonException;
 use OpenSSLAsymmetricKey;
 
-class JWTValidator implements JWTValidatorInterface
+/**
+ * Validates JWS using RSASSA-PKCS1-v1_5 SHA-256.
+ * @link https://datatracker.ietf.org/doc/html/rfc7515#appendix-A.2
+ */
+class RS256JWSValidator implements JWSValidatorInterface
 {
-
-	use HeaderValidatorTrait, PayloadValidatorTrait, SignatureVerifierTrait;
+	use HeaderValidatorTrait, PayloadValidatorTrait, SignatureValidatorTrait;
 
 	/**
-	 * The header of the JWT.
+	 * The header of the JWS.
 	 */
 	private ?array $header = null;
 
 	/**
-	 * The payload of the JWT.
+	 * The payload of the JWS.
 	 */
 	private ?array $payload = null;
 
 	/**
-	 * The signature of the JWT.
+	 * The signature of the JWS.
 	 */
 	private ?string $signature = null;
 
 	/**
-	 * The encoded header and payload concatenated with a '.',
-	 * which is the cryptographically signed data.
+	 * The initial substring of the JWS Compact Serialization representation
+	 * up until but not including the second period character.
+	 * 
+	 * @link https://datatracker.ietf.org/doc/html/rfc7515#section-2
 	 */
-	private ?string $signedData = null;
+	private ?string $signingInput = null;
 
 	/**
 	 * The collection of candidate public keys.
@@ -57,6 +62,7 @@ class JWTValidator implements JWTValidatorInterface
 
 	/**
 	 * The leeway used to account for clock skew.
+	 * @link https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.4
 	 */
 	private ?DateInterval $leeway = null;
 
@@ -76,7 +82,7 @@ class JWTValidator implements JWTValidatorInterface
 	 */
 	public function validate()
 	{
-		$this->checkJWTAndPublicKeysAreLoaded();
+		$this->checkJWSAndPublicKeysAreLoaded();
 		$this->now = new DateTimeImmutable();
 
 		$this->verifyHeaderClaims();
@@ -87,10 +93,10 @@ class JWTValidator implements JWTValidatorInterface
 	/**
 	 * @inheritdoc
 	 */
-	public function setJWT(string $token): self
+	public function setJWS(string $token): self
 	{
 		[$this->header, $this->payload, $this->signature] = self::decode($token);
-		$this->signedData = self::getSignedData($token);
+		$this->signingInput = self::getSigningInput($token);
 
 		return $this;
 	}
@@ -167,7 +173,7 @@ class JWTValidator implements JWTValidatorInterface
 	 * @param string $token The encoded token.
 	 * @return string The signed data.
 	 */
-	private static function getSignedData(string $token): string
+	private static function getSigningInput(string $token): string
 	{
 		return implode('.', explode('.', $token, -1));
 	}
@@ -199,7 +205,7 @@ class JWTValidator implements JWTValidatorInterface
 	 * have been correctly set.
 	 * @throws InvalidArgumentException If one or more of the components have not been loaded.
 	 */
-	private function checkJWTAndPublicKeysAreLoaded()
+	private function checkJWSAndPublicKeysAreLoaded()
 	{
 		if (
 			$this->header === null ||

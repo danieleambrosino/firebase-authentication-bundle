@@ -5,18 +5,17 @@ namespace DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts;
 use InvalidArgumentException;
 
 /**
- * Validates a JWT, verifying its claims and its signature.
+ * Validates a JWS, verifying its claims and its signature.
  */
-interface JWTValidatorInterface
+interface JWSValidatorInterface
 {
-
 	/**
 	 * Sets the token and decodes it.
 	 * 
 	 * @return self The updated Validator.
 	 * @throws InvalidArgumentException If the decoding fails.
 	 */
-	public function setJWT(string $token): self;
+	public function setJWS(string $token): self;
 
 	/**
 	 * Sets the collection of candidate public keys to verify the signature.
@@ -34,11 +33,11 @@ interface JWTValidatorInterface
 	public function setLeeway(int $leeway): self;
 	
 	/**
-	 * Validates the currently set token, verifying that the claims follow their constraints
+	 * Validates the currently set token, verifying that the claims conform to their constraints
 	 * and that the signature is valid using the appropriate public key.
 	 * 
 	 * @throws InvalidArgumentException If the validation fails.
-	 * @link https://firebase.google.com/docs/auth/admin/verify-id-tokens#verify_id_tokens_using_a_third-party_jwt_library
+	 * @link https://firebase.google.com/docs/auth/admin/verify-id-tokens#verify_id_tokens_using_a_third-party_JWS_library
 	 */
 	public function validate();
 
