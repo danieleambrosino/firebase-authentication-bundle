@@ -1,6 +1,13 @@
 # FirebaseAuthenticationBundle
 A lightweight, self-contained, zero-dependency, spec-compliant Symfony bundle providing authentication with Firebase JWT out of the box.
 
+## Installation
+Install this bundle with Composer:
+```shell
+composer require danieleambrosino/firebase-authentication-bundle
+```
+
+## Configuration
 The only parameter you have to set is your Firebase project's ID in the `FIREBASE_PROJECT_ID` environment variable:
 
 ```env
