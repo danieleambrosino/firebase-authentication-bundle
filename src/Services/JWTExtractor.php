@@ -25,7 +25,7 @@ class JWTExtractor implements JWTExtractorInterface
 		$authorizationHeader = $request->headers->get('Authorization');
 		$headerParts = explode(' ', $authorizationHeader, 3);
 
-		if (count($headerParts) !== 2 || strcasecmp($headerParts[0], 'Bearer') !== 0) {
+		if (count($headerParts) !== 2 || $headerParts[0] !== 'Bearer') {
 			throw new InvalidArgumentException('Invalid authorization header!');
 		}
 
