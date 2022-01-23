@@ -35,7 +35,7 @@ security:
 ```
 
 ## Notes
-To leverage the features provided by this bundle work, it's given for granted that:
+To leverage the features provided by this bundle, it's given for granted that:
 - you're using an authentication method on Firebase which relies on emails (e.g. email and password authentication, Google authentication etc);
 - your Symfony users are identified by their email - usually you're likely to have a `User` class/entity implementing the `UserInterface::getUserIdentifier()` method as follows:
 
