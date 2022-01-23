@@ -4,9 +4,9 @@ namespace DanieleAmbrosino\FirebaseAuthenticationBundle\Services;
 
 use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\JWSValidatorInterface;
 use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\PublicKeyCollectionInterface;
-use DanieleAmbrosino\FirebaseAuthenticationBundle\Services\JWSValidator\HeaderValidatorTrait;
-use DanieleAmbrosino\FirebaseAuthenticationBundle\Services\JWSValidator\PayloadValidatorTrait;
-use DanieleAmbrosino\FirebaseAuthenticationBundle\Services\JWSValidator\SignatureValidatorTrait;
+use DanieleAmbrosino\FirebaseAuthenticationBundle\Services\RS256JWSValidator\HeaderValidatorTrait;
+use DanieleAmbrosino\FirebaseAuthenticationBundle\Services\RS256JWSValidator\PayloadValidatorTrait;
+use DanieleAmbrosino\FirebaseAuthenticationBundle\Services\RS256JWSValidator\SignatureValidatorTrait;
 use DateInterval;
 use DateTimeImmutable;
 use DateTimeInterface;

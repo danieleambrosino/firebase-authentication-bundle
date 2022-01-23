@@ -1,7 +1,6 @@
 <?php
 
-namespace DanieleAmbrosino\FirebaseAuthenticationBundle\Services\JWSValidator;
-
+namespace DanieleAmbrosino\FirebaseAuthenticationBundle\Services\RS256JWSValidator;
 
 use DateTime;
 use InvalidArgumentException;
