@@ -38,12 +38,11 @@ class FirebaseAuthenticator extends AbstractAuthenticator implements Authenticat
 	}
 
 	/**
-	 * Kick-in only if an `Authorization` header is found.
 	 * @inheritdoc
 	 */
 	public function supports(Request $request): ?bool
 	{
-		return $request->headers->has('Authorization');
+		return $this->jwtExtractor->supports($request);
 	}
 
 	/**

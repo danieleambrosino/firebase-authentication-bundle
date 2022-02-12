@@ -1,17 +1,26 @@
 services:
-  _defaults:
-    autowire: true
+  firebase_authentication.extractor.bearer:
+    class: DanieleAmbrosino\FirebaseAuthenticationBundle\Services\JWTExtractor\BearerExtractor
 
-  DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\JWTExtractorInterface:
-    class: DanieleAmbrosino\FirebaseAuthenticationBundle\Services\JWTExtractor
-  
-  DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\PublicKeyFetcherInterface:
+  firebase_authentication.extractor.cookie:
+    class: DanieleAmbrosino\FirebaseAuthenticationBundle\Services\JWTExtractor\CookieExtractor
+    arguments:
+      $cookieName: '%firebase_authentication.cookie_name%'
+
+  firebase_authentication.public_key_fetcher:
     class: DanieleAmbrosino\FirebaseAuthenticationBundle\Services\PublicKeyFetcher
-  
-  DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\JWSValidatorInterface:
+    autowire: true
+    arguments:
+      $strategy: '%firebase_authentication.extractor%'
+
+  firebase_authentication.jws_validator:
     class: DanieleAmbrosino\FirebaseAuthenticationBundle\Services\RS256JWSValidator
     arguments:
-      - '%firebase_authentication.project_id%'
-  
+      $firebaseProjectId: '%firebase_authentication.project_id%'
+      $strategy: '%firebase_authentication.extractor%'
+
   firebase_authentication.authenticator:
     class: DanieleAmbrosino\FirebaseAuthenticationBundle\Security\FirebaseAuthenticator
+    arguments:
+      $publicKeyFetcher: '@firebase_authentication.public_key_fetcher'
+      $jwsValidator: '@firebase_authentication.jws_validator'

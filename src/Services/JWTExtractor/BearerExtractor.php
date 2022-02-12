@@ -1,14 +1,19 @@
 <?php
 
-namespace DanieleAmbrosino\FirebaseAuthenticationBundle\Services;
+namespace DanieleAmbrosino\FirebaseAuthenticationBundle\Services\JWTExtractor;
 
 use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\JWTExtractorInterface;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Exception\TokenNotFoundException;
 
-class JWTExtractor implements JWTExtractorInterface
+class BearerExtractor implements JWTExtractorInterface
 {
+
+	public function supports(Request $request): bool
+	{
+		return $request->headers->has('Authorization');
+	}
+	
 	/**
 	 * @inheritdoc
 	 * According to the specification, the token is parsed
@@ -18,10 +23,6 @@ class JWTExtractor implements JWTExtractorInterface
 	 */
 	public function extract(Request $request): string
 	{
-		if (!$request->headers->has('Authorization')) {
-			throw new TokenNotFoundException('Authorization header not found!');
-		}
-
 		$authorizationHeader = $request->headers->get('Authorization');
 		$headerParts = explode(' ', $authorizationHeader, 3);
 

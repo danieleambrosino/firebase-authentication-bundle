@@ -69,7 +69,10 @@ trait PayloadValidatorTrait
 			throw new InvalidArgumentException('Issuer is not set');
 		}
 
-		if ($this->payload['iss'] !== "https://securetoken.google.com/{$this->firebaseProjectId}") {
+		if (
+			$this->strategy === 'bearer' && $this->payload['iss'] !== "https://securetoken.google.com/{$this->firebaseProjectId}" ||
+			$this->strategy === 'cookie' && $this->payload['iss'] !== "https://session.firebase.google.com/{$this->firebaseProjectId}"
+		) {
 			throw new InvalidArgumentException('The JWT has not been issued by Google');
 		}
 	}

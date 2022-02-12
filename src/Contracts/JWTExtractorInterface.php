@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\Request;
  */
 interface JWTExtractorInterface
 {
+
+	public function supports(Request $request): bool;
+	
 	/**
 	 * Extracts an authentication token from an HTTP request.
 	 * Returns a string containing the encoded token,

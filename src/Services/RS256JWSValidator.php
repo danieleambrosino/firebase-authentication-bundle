@@ -71,7 +71,8 @@ class RS256JWSValidator implements JWSValidatorInterface
 		/**
 		 * The ID of the Firebase project.
 		 */
-		private string $firebaseProjectId
+		private string $firebaseProjectId,
+		private string $strategy
 	) {
 		// By default, set the leeway to 0 seconds
 		$this->leeway = new DateInterval('PT0S');

@@ -7,6 +7,8 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Parameter;
+use Symfony\Component\DependencyInjection\Reference;
 
 class FirebaseAuthenticatorFactory implements AuthenticatorFactoryInterface
 {
@@ -27,19 +29,10 @@ class FirebaseAuthenticatorFactory implements AuthenticatorFactoryInterface
 	}
 
 	/**
-	 * Sets the configuration definition for the FirebaseAuthenticator
-	 * on a per-firewall basis.
-	 * 
 	 * @param ArrayNodeDefinition $builder The configuration definition builder.
 	 */
 	public function addConfiguration(NodeDefinition $builder)
 	{
-		$builder
-			->children()
-				->scalarNode('leeway')
-					->defaultValue(0)
-					->end()
-			->end();
 	}
 
 	/**
@@ -48,10 +41,11 @@ class FirebaseAuthenticatorFactory implements AuthenticatorFactoryInterface
 	public function createAuthenticator(ContainerBuilder $container, string $firewallName, array $config, string $userProviderId): string|array
 	{
 		$authenticatorId = 'security.authenticator.firebase.' . $firewallName;
-		$leeway = $config['leeway'];
+		
 		$container
 			->setDefinition($authenticatorId, new ChildDefinition('firebase_authentication.authenticator'))
-			->setArgument('$leeway', $leeway);
+				->setArgument('$jwtExtractor', new Reference('firebase_authentication.extractor'))
+				->setArgument('$leeway', new Parameter('firebase_authentication.leeway'));
 		return $authenticatorId;
 	}
 }
