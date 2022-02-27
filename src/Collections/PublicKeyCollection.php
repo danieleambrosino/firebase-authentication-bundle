@@ -40,13 +40,13 @@ class PublicKeyCollection implements PublicKeyCollectionInterface
 		return $this;
 	}
 
-	public function serialize(): string
+	public function __serialize(): array
 	{
-		return serialize($this->collection);
+		return $this->collection;
 	}
 
-	public function unserialize(string $data)
+	public function __unserialize(array $data): void
 	{
-		$this->collection = unserialize($data);
+		$this->collection = $data;
 	}
 }

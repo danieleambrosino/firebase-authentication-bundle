@@ -8,7 +8,7 @@ use Serializable;
 /**
  * Stores a set of public keys indexed by their ID.
  */
-interface PublicKeyCollectionInterface extends Serializable
+interface PublicKeyCollectionInterface
 {
 	/**
 	 * Gets the public key corresponding to the given ID.
