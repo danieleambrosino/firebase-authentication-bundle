@@ -22,3 +22,5 @@ services:
     abstract: true
     class: DanieleAmbrosino\FirebaseAuthenticationBundle\Security\FirebaseAuthenticator
 
+  firebase_authentication.user_provider:
+    class: DanieleAmbrosino\FirebaseAuthenticationBundle\Security\UserProvider
