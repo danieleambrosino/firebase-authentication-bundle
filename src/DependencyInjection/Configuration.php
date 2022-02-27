@@ -22,7 +22,11 @@ class Configuration implements ConfigurationInterface
 						->end()
 					->scalarNode('cookie_name')
 						->info('Used only by the authenticators with "cookie" strategy')
-						->defaultValue('sessionToken');
+						->defaultValue('sessionToken')
+						->end()
+					->scalarNode('user_identifier')
+						->info('The field in the payload used to identify the user')
+						->defaultValue('sub');
 
 		return $treeBuilder;
 	}

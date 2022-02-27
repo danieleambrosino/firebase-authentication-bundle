@@ -45,7 +45,7 @@ interface JWSValidatorInterface
 	public function validate();
 
 	/**
-	 * Returns the email from the validated payload.
+	 * Returns the user identifier from the validated payload.
 	 */
-	public function getEmail(): string;
+	public function getUserIdentifier(): string;
 }

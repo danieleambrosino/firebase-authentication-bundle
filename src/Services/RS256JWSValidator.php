@@ -74,7 +74,8 @@ class RS256JWSValidator implements JWSValidatorInterface
 		 */
 		private string $firebaseProjectId,
 		private string $strategy,
-		private bool $verifyEmail
+		private bool $verifyEmail,
+		private string $userIdentifier
 	) {
 		// By default, set the leeway to 0 seconds
 		$this->leeway = new DateInterval('PT0S');
@@ -132,15 +133,15 @@ class RS256JWSValidator implements JWSValidatorInterface
 	/**
 	 * @inheritdoc
 	 */
-	public function getEmail(): string
+	public function getUserIdentifier(): string
 	{
 		if (
-			!isset($this->payload['email']) ||
-			!is_string($this->payload['email'])
+			!isset($this->payload[$this->userIdentifier]) ||
+			!is_string($this->payload[$this->userIdentifier])
 		) {
-			throw new InvalidArgumentException('The JWS does not contain an email');
+			throw new InvalidArgumentException("The JWS does not contain a '{$this->userIdentifier}' field");
 		}
-		return $this->payload['email'];
+		return $this->payload[$this->userIdentifier];
 	}
 
 	/**

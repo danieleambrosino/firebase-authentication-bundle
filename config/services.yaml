@@ -17,6 +17,7 @@ services:
     abstract: true
     arguments:
       $firebaseProjectId: '%firebase_authentication.project_id%'
+      $userIdentifier: '%firebase_authentication.user_identifier%'
 
   firebase_authentication.authenticator:
     class: DanieleAmbrosino\FirebaseAuthenticationBundle\Security\FirebaseAuthenticator
