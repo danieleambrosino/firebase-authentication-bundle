@@ -18,7 +18,11 @@ class Configuration implements ConfigurationInterface
 						->end()
 					->scalarNode('leeway')
 						->info('The leeway to account for clock skew with Google servers')
-						->defaultValue(0);
+						->defaultValue(0)
+						->end()
+					->scalarNode('cookie_name')
+						->info('Used only by the authenticators with "cookie" strategy')
+						->defaultValue('sessionToken');
 
 		return $treeBuilder;
 	}

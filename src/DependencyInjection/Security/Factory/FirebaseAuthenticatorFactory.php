@@ -39,11 +39,7 @@ class FirebaseAuthenticatorFactory implements AuthenticatorFactoryInterface
 				->defaultValue('bearer')
 				->end()
 			->booleanNode('verify_email')
-				->defaultFalse()
-				->end()
-			->scalarNode('cookie_name')
-				->info('If the strategy is "cookie", sets the name of the cookie to be extracted')
-				->defaultValue('sessionToken');
+				->defaultFalse();
 	}
 
 	/**
