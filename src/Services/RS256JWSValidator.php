@@ -4,6 +4,7 @@ namespace DanieleAmbrosino\FirebaseAuthenticationBundle\Services;
 
 use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\JWSValidatorInterface;
 use DanieleAmbrosino\FirebaseAuthenticationBundle\Contracts\PublicKeyCollectionInterface;
+use DanieleAmbrosino\FirebaseAuthenticationBundle\Services\RS256JWSValidator\EmailValidatorTrait;
 use DanieleAmbrosino\FirebaseAuthenticationBundle\Services\RS256JWSValidator\HeaderValidatorTrait;
 use DanieleAmbrosino\FirebaseAuthenticationBundle\Services\RS256JWSValidator\PayloadValidatorTrait;
 use DanieleAmbrosino\FirebaseAuthenticationBundle\Services\RS256JWSValidator\SignatureValidatorTrait;
@@ -20,7 +21,7 @@ use OpenSSLAsymmetricKey;
  */
 class RS256JWSValidator implements JWSValidatorInterface
 {
-	use HeaderValidatorTrait, PayloadValidatorTrait, SignatureValidatorTrait;
+	use HeaderValidatorTrait, PayloadValidatorTrait, SignatureValidatorTrait, EmailValidatorTrait;
 
 	/**
 	 * The header of the JWS.
@@ -72,7 +73,8 @@ class RS256JWSValidator implements JWSValidatorInterface
 		 * The ID of the Firebase project.
 		 */
 		private string $firebaseProjectId,
-		private string $strategy
+		private string $strategy,
+		private bool $verifyEmail
 	) {
 		// By default, set the leeway to 0 seconds
 		$this->leeway = new DateInterval('PT0S');
@@ -89,6 +91,9 @@ class RS256JWSValidator implements JWSValidatorInterface
 		$this->verifyHeaderClaims();
 		$this->verifySignature();
 		$this->verifyPayloadClaims();
+		if ($this->verifyEmail) {
+			$this->assertEmailIsVerified();
+		}
 	}
 
 	/**

@@ -60,6 +60,7 @@ class FirebaseAuthenticatorFactory implements AuthenticatorFactoryInterface
 		$validatorDefinition = $container->setDefinition($authenticatorId . '.jws_validator', new ChildDefinition('firebase_authentication.jws_validator'));
 		$validatorDefinition
 			->setArgument('$strategy', $config['strategy'])
+			->setArgument('$verifyEmail', $config['verify_email'])
 		;
 
 		$container
