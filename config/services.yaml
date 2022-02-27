@@ -8,19 +8,17 @@ services:
       $cookieName: '%firebase_authentication.cookie_name%'
 
   firebase_authentication.public_key_fetcher:
+    abstract: true
     class: DanieleAmbrosino\FirebaseAuthenticationBundle\Services\PublicKeyFetcher
     autowire: true
-    arguments:
-      $strategy: '%firebase_authentication.extractor%'
 
   firebase_authentication.jws_validator:
+    abstract: true
     class: DanieleAmbrosino\FirebaseAuthenticationBundle\Services\RS256JWSValidator
     arguments:
       $firebaseProjectId: '%firebase_authentication.project_id%'
-      $strategy: '%firebase_authentication.extractor%'
 
   firebase_authentication.authenticator:
+    abstract: true
     class: DanieleAmbrosino\FirebaseAuthenticationBundle\Security\FirebaseAuthenticator
-    arguments:
-      $publicKeyFetcher: '@firebase_authentication.public_key_fetcher'
-      $jwsValidator: '@firebase_authentication.jws_validator'
+

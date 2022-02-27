@@ -33,6 +33,17 @@ class FirebaseAuthenticatorFactory implements AuthenticatorFactoryInterface
 	 */
 	public function addConfiguration(NodeDefinition $builder)
 	{
+		$builder->children()
+			->enumNode('strategy')
+				->values(['bearer', 'cookie'])
+				->defaultValue('bearer')
+				->end()
+			->booleanNode('verify_email')
+				->defaultFalse()
+				->end()
+			->scalarNode('cookie_name')
+				->info('If the strategy is "cookie", sets the name of the cookie to be extracted')
+				->defaultValue('sessionToken');
 	}
 
 	/**
@@ -41,11 +52,23 @@ class FirebaseAuthenticatorFactory implements AuthenticatorFactoryInterface
 	public function createAuthenticator(ContainerBuilder $container, string $firewallName, array $config, string $userProviderId): string|array
 	{
 		$authenticatorId = 'security.authenticator.firebase.' . $firewallName;
-		
+
+		$fetcherDefinition = $container->setDefinition($authenticatorId . '.public_key_fetcher', new ChildDefinition('firebase_authentication.public_key_fetcher'));
+		$fetcherDefinition
+			->setArgument('$strategy', $config['strategy']);
+
+		$validatorDefinition = $container->setDefinition($authenticatorId . '.jws_validator', new ChildDefinition('firebase_authentication.jws_validator'));
+		$validatorDefinition
+			->setArgument('$strategy', $config['strategy'])
+		;
+
 		$container
 			->setDefinition($authenticatorId, new ChildDefinition('firebase_authentication.authenticator'))
-				->setArgument('$jwtExtractor', new Reference('firebase_authentication.extractor'))
+				->setArgument('$jwtExtractor', new Reference('firebase_authentication.extractor.' . $config['strategy']))
+				->setArgument('$publicKeyFetcher', $fetcherDefinition)
+				->setArgument('$jwsValidator', $validatorDefinition)
 				->setArgument('$leeway', new Parameter('firebase_authentication.leeway'));
+
 		return $authenticatorId;
 	}
 }
