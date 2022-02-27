@@ -17,7 +17,7 @@
     "require": {
         "php": "^8.0",
         "ext-openssl": "*",
-        "psr/cache": "^3.0",
+        "psr/cache": ">=2.0",
         "symfony/http-client": "^6.0",
         "symfony/security-bundle": "^6.0",
         "symfony/dependency-injection": "^6.0",
