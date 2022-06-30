@@ -61,12 +61,12 @@ class FirebaseAuthenticator extends AbstractAuthenticator implements Authenticat
 
 			$this->jwsValidator->validate();
 
-			$email = $this->jwsValidator->getUserIdentifier();
+			$userIdentifier = $this->jwsValidator->getUserIdentifier();
 		} catch (InvalidArgumentException $e) {
 			throw new AuthenticationException($e->getMessage());
 		}
 
-		return new SelfValidatingPassport(new UserBadge($email));
+		return new SelfValidatingPassport(new UserBadge($userIdentifier));
 	}
 
 	/**
