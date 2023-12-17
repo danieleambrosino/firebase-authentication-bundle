@@ -25,7 +25,7 @@ class UserProviderFactory implements UserProviderFactoryInterface
 			->end();
 	}
 
-	public function create(ContainerBuilder $container, string $id, array $config)
+	public function create(ContainerBuilder $container, string $id, array $config): void
 	{
 		$container->setDefinition($id, new ChildDefinition('firebase_authentication.user_provider'));
 	}
