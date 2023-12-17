@@ -23,7 +23,7 @@ class User implements UserInterface
 		return $this->roles;
 	}
 
-	public function eraseCredentials()
+	public function eraseCredentials(): void
 	{
 	}
 }
