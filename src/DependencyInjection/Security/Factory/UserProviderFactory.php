@@ -18,7 +18,7 @@ class UserProviderFactory implements UserProviderFactoryInterface
 	/**
 	 * @param ArrayNodeDefinition $builder
 	 */
-	public function addConfiguration(NodeDefinition $builder)
+	public function addConfiguration(NodeDefinition $builder): void
 	{
 		$builder->children()
 			->booleanNode('active')->defaultTrue()
