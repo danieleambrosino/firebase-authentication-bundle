@@ -31,7 +31,7 @@ class FirebaseAuthenticatorFactory implements AuthenticatorFactoryInterface
 	/**
 	 * @param ArrayNodeDefinition $builder The configuration definition builder.
 	 */
-	public function addConfiguration(NodeDefinition $builder)
+	public function addConfiguration(NodeDefinition $builder): void
 	{
 		$builder->children()
 			->enumNode('strategy')
